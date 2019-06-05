@@ -1,0 +1,13 @@
+{
+    "name": "babytree/httpclient",
+    "description": "REAL async http/https client for php",
+    "autoload": {
+        "files": ["src/functions_include.php"],
+        "psr-4": {"Babytree\\HttpClient\\": "src/"}
+    },
+    "require-dev": {
+    },
+    "require": {
+        "psr/http-message": "1.0.1"
+    }
+}
