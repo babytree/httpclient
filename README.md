@@ -1,7 +1,7 @@
 # PHP异步http/https客户端
 绝大部分互联网公司的php-fpm都跑在单进程单线程模式下，随着微服务架构的兴起，普通的curl已经不能满足复杂业务场景的需求。而curl_multi和guzzle尽管支持多个http请求的异步执行，但是它们的api对后端开发同学并不友好。
 
-babytree-com/httpclient是宝宝树在复杂业务场景下积累的php http客户端。
+babytree/httpclient是宝宝树在复杂业务场景下积累的php http客户端。
 
 ## 特性
 - http请求和业务代码可以异步执行
@@ -19,7 +19,7 @@ babytree-com/httpclient是宝宝树在复杂业务场景下积累的php http客�
 
 ## 安装
 ```sh
-composer install babytree-com/httpclient 1.0.0
+composer install babytree/httpclient 1.0.0
 ```
 
 ## 使用方法
