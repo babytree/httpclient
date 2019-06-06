@@ -18,7 +18,7 @@ babytree/httpclient是宝宝树在复杂业务场景下积累的php http客户�
 
 ## 安装
 ```sh
-composer install babytree/httpclient 1.0.0
+composer require babytree/httpclient 1.0.0
 ```
 
 ## 使用方法
