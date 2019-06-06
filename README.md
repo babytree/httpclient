@@ -8,8 +8,7 @@ babytree/httpclient是宝宝树在复杂业务场景下积累的php http客户�
 - 多个http请求可以异步执行
 - 满足psr规范
 - 比guzzle、curl_multi更友好的api
-- 全中文文档
-- 线上复杂业务场景下的考验
+- 经过了线上复杂业务场景的考验
 
 其中，http请求和业务代码的异步执行，是curl_multi和guzzle所不支持的。使用httpclient，在复杂业务场景下，可以将总体代码运行时间进一步缩短，进而提高QPS。
 
@@ -106,8 +105,61 @@ phpunit tests ./
 ```
 
 ## 选项
-TODO: 列出选项，如果有必要，可以写个例子
+```php
+$options = array(
+	//请求超时时间
+	RequestOptions::TIMEOUT => 3,
+	//debug, $stream不指定时输出到标准设备
+	RequestOptions::DEBUG  => $stream,
+	//设置header
+	RequestOptions::HEADERS => [
+	        'timestamp'    => time() * 1000,
+	        'signature'    => $signature,
+	        'platform'     => 1,
+	        'token'        => $meitun_token,
+	    ],
+	//代理
+	RequestOptions::PROXY   => '172.16.99.239:8888',
+	//post json格式 默认添加header 'Content-Type', 'application/json;charset=utf-8'
+	RequestOptions::JSON => array(
+	    'baby_id' => '11111',
+	    'baby_name' => '对对对',
+	    'baby_gender' => '男',
+	    ),
+	//post form表单格式 默认添加header 'Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8'
+	RequestOptions::FORM_PARAMS => array(
+	    'baby_id' => '11111',
+	    'baby_name' => '对对对',
+	    'baby_gender' => '男',
+	    ),
+	//post上传文件 默认添加header 'Content-Type', 'multipart/form-data; boundary='
+	RequestOptions::MULTIPART => array(
+	    'id'        => 1,
+	    'user_id'   => 2,
+	    'svg_file1' => '/home/baiwei/poster_backgroup.png',
+	    'svg_file2' => '/home/baiwei/poster_event.png',
+	    ),
+);
+```
+
 ## 范例
 ### 上传文件
-TODO: 上传文件的例子
+```php
+$request_client = new RequestClient();
 
+// 如要要测试，可以使用tests/server.go提供的上传功能来作为测试服务器
+$server_url = "http://127.0.0.1:18888/upload";
+
+$options = array(
+        RequestOptions::DEBUG  => 1,
+        RequestOptions::MULTIPART => array(
+            'id'        => 1,
+            'user_id'   => 2,
+            'file' => '/home/baiwei/poster_backgroup.png',
+            ),
+        );
+$request_uniq = $request_client->addRequest($server_url, $options, RequestClient::MODE_ASYNC);
+$ret = $request_client->getResponse($request_uniq);
+// 对请求结果进行处理
+// ...
+```
