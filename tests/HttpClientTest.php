@@ -12,24 +12,35 @@ use Babytree\HttpClient\RequestClient;
 
 final class HttpClientTest extends TestCase {
 
-    protected static $server_pid;
+    protected static $server_process;
     protected static $server_url = "http://127.0.0.1:18888/sleep";
 
     public static function setUpBeforeClass() {
         echo "编译测试服务器，请稍等5秒\n";
-	    $command = sprintf(
-            'cd %s && go build -o test_server && %s/test_server >/dev/null 2>&1 & echo $!',
-            __DIR__, __DIR__
+        $command_build_server = sprintf(
+            'cd %s && go build -o test_server',
+            __DIR__
         );
+        exec($command_build_server);
 
-        $output = array();
-        exec($command, $output);
-        sleep(5);
-        self::$server_pid = (int) $output[0];
+	    $command_start_server = sprintf(
+            '%s/test_server',
+            __DIR__
+        );
+        $descriptorspec=array(
+            0=>STDIN,
+            1=>STDOUT,
+            2=>STDERR
+        );
+        self::$server_process = proc_open($command_start_server, $descriptorspec,$pipes);
+
+        sleep(1);
     }
 
     public static function tearDownAfterClass() {
-        exec('kill ' . self::$server_pid);
+        $s = proc_get_status(self::$server_process);
+        posix_kill($s['pid'], SIGKILL);
+        proc_close(self::$server_process);
 	}
 
     public function testAsyncRequest() {
